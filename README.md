@@ -1,53 +1,197 @@
 
-# moteus-motor-control
+# Balancing Lower Body for PIB the Humanoid Robot
 
-### Introduction to Balancing
-Balancing is a critical capability for humanoid robots like pib. In the context of robotic movement and control, balancing involves maintaining the robot's center of gravity within a stable region, allowing it to stand or move without tipping over. This task is achieved through precise control of the motors, which continuously adjust based on real-time data about the robot's position, orientation, and applied forces. The lower body balancing mechanism is essential to pib's ability to perform stable walking and standing.
+## Introduction to Balancing
 
-### Introduction to Moteus MJBots
-Moteus controllers by mjbots are advanced motor controllers designed specifically for high-performance robotics applications. They offer features like rapid feedback and precise control of brushless motors, which are crucial in dynamic environments. For pib, the Moteus controllers provide the necessary performance to implement effective balancing control, adjusting quickly in response to the robot's positional shifts.
+Balancing is a fundamental capability for humanoid robots, enabling them to maintain stability while standing or moving. In this project, we focus on balancing the lower body of PIB, our humanoid robot, using control algorithms applied to a simplified model of an inverted pendulum on a cart. By implementing control strategies like PID and LQR, we aim to keep the robot upright and stable.
 
-### Installation
-To set up the environment, clone the repository and install the necessary Python dependencies. Follow these steps:
+## Introduction to Moteus and MJBots
+
+[Moteus](https://github.com/mjbots/moteus) is a high-performance servo motor controller designed by MJBots. It is ideal for robotic applications requiring precise motion control. Moteus offers advanced features such as torque, position, and velocity control, making it suitable for implementing sophisticated control algorithms needed for balancing tasks.
+
+## Installation
+
+Clone the repository and navigate to the balancing directory:
 
 ```bash
 git clone https://github.com/pib-rocks/moteus-motor-control.git
 cd moteus-motor-control/python/balancing
+```
+
+Install the required Python packages:
+
+```bash
 pip install -r requirements.txt
+```
+
+Configure your environment by running:
+
+```bash
 python3 settings.py
 ```
 
-### Quick Scripts: LQR and PID for 1 DOF Inverted Pendulum Balancing
-This repository contains example scripts that implement two types of controllers for balancing a one-degree-of-freedom (1 DOF) inverted pendulum: a Proportional-Derivative (PD) controller and a Linear Quadratic Regulator (LQR). These scripts provide a starting point for testing and observing balancing control in a simulated environment before applying it to pib’s hardware.
+## Quick Scripts for LQR and PID Balancing
 
-### Balancing System Explanation
-In robotics, balancing can be viewed as an "inverted pendulum" problem, where a moving body (in this case, pib's lower body) must counteract forces that would cause it to tip over. This involves applying calculated torques to maintain balance. By modeling the balancing system as an inverted pendulum on a cart, the robot's controller can simulate and apply corrective actions in real-time, helping to stabilize the lower body during movement.
+To quickly test the balancing algorithms, run the following scripts.
 
 ### PID Balancing
-**PID Control** (PD in our case) is a widely used control approach in which adjustments are made based on proportional and derivative values derived from the system’s error. 
-   - **Proportional (P)**: This part of the control reacts to the current error magnitude, creating corrective force proportional to the error. 
-   - **Derivative (D)**: This component considers the rate of error change over time, helping to stabilize the system by damping oscillations.
 
-For our balancing problem, we only require PD control to maintain stability. The script for PD balancing adjusts the motor outputs based on both current error and rate of change, stabilizing pib’s lower body effectively.
-
-To run the PD balancing script:
 ```bash
-python3 pd_balancing.py
+python3 pid_balancing.py
 ```
 
-### System Dynamics (Inverted Pendulum on Cart)
-The dynamics of the balancing problem can be likened to an inverted pendulum mounted on a moving cart, where corrective forces are applied to the cart to keep the pendulum upright. This system is unstable, meaning that without active control, it would quickly tip over. The robot’s lower body balancing task applies forces to achieve stability in this otherwise unstable configuration, simulating a pendulum’s equilibrium through torque adjustments in the robot's motors.
-
-### State Space Representation
-In control theory, a state-space representation provides a mathematical model of a physical system in terms of state variables and linear equations. By converting our balancing problem into state-space form, we can utilize advanced control strategies like the Linear Quadratic Regulator (LQR) to handle balancing effectively. This approach considers the system’s current state and predicts future states to maintain stability.
-
 ### LQR Balancing
-**LQR (Linear Quadratic Regulator)** is an optimal control method that minimizes a cost function to balance stability and control effort. In the context of balancing, the LQR controller calculates the optimal motor adjustments needed to keep the inverted pendulum upright while minimizing energy use. This results in smooth and efficient balancing. 
 
-To run the LQR balancing script:
 ```bash
 python3 lqr_balancing.py
 ```
 
-### References
-* [Josh Pieper: hoverbot - hoverboard motor balancing robot](https://youtu.be/syxE1NEU7lw?feature=shared&t=449)
+## Balancing System Explanation
+
+The balancing system models the lower body of PIB as an inverted pendulum mounted on a cart. The cart represents the wheel base, and the pendulum represents the robot's torso. The objective is to apply control inputs to the motors (cart) to keep the pendulum (torso) balanced upright. This setup simplifies the complex dynamics of a humanoid robot to a more manageable control problem.
+
+## PID Balancing
+
+### PID Controller Explanation
+
+A PID controller computes an error value as the difference between a desired setpoint and a measured process variable. It applies a correction based on proportional (P), integral (I), and derivative (D) terms. In our case, we use a PD controller (proportional and derivative terms only) to balance the inverted pendulum.
+
+The control input \( u(t) \) is calculated as:
+
+$$
+u(t) = K_p e(t) + K_d \frac{{de(t)}}{{dt}}
+$$
+
+- \( e(t) \): Error between the desired angle (upright position) and the current angle.
+- \( K_p \): Proportional gain.
+- \( K_d \): Derivative gain.
+
+The proportional term adjusts the control input proportional to the error, while the derivative term predicts system behavior, providing damping and improving stability.
+
+### Running the PID Script
+
+Execute the PD balancing script:
+
+```bash
+python3 pid_balancing.py
+```
+
+Ensure that the gains \( K_p \) and \( K_d \) are properly tuned in the script for optimal performance.
+
+## System Dynamics
+
+The inverted pendulum on a cart can be described by the following equations of motion:
+
+$$
+m \ddot{x} + m l \ddot{\theta} \cos \theta - m l \dot{\theta}^2 \sin \theta = F
+$$
+
+$$
+m l \ddot{x} \cos \theta + m l^2 \ddot{\theta} - m g l \sin \theta = 0
+$$
+
+Where:
+
+- \( x \): Position of the cart.
+- \( \theta \): Angle of the pendulum (from vertical).
+- \( m \): Mass of the pendulum.
+- \( l \): Length to the pendulum's center of mass.
+- \( F \): Force applied to the cart.
+- \( g \): Acceleration due to gravity.
+
+These nonlinear equations describe the coupling between the cart and pendulum dynamics.
+
+## State-Space Representation
+
+Linearizing the system around the upright position (\( \theta \approx 0 \)), we obtain the state-space representation:
+
+$$
+\dot{\mathbf{x}} = A \mathbf{x} + B u
+$$
+
+$$
+\mathbf{y} = C \mathbf{x} + D u
+$$
+
+State vector:
+
+$$
+\mathbf{x} = \begin{bmatrix} x \\ \dot{x} \\ \theta \\ \dot{\theta} \end{bmatrix}
+$$
+
+Input vector:
+
+$$
+u = F
+$$
+
+System matrices:
+
+$$
+A = \begin{bmatrix}
+0 & 1 & 0 & 0 \\
+0 & 0 & -\frac{m g}{M} & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & \frac{(M + m) g}{M l} & 0
+\end{bmatrix}, \quad
+B = \begin{bmatrix}
+0 \\
+\frac{1}{M} \\
+0 \\
+-\frac{1}{M l}
+\end{bmatrix}
+$$
+
+Where:
+
+- \( M \): Mass of the cart.
+- \( m \): Mass of the pendulum.
+- \( l \): Length to the pendulum's center of mass.
+- \( g \): Acceleration due to gravity.
+
+This linearized model is used for designing the LQR controller.
+
+## LQR Balancing
+
+### LQR Controller Explanation
+
+The Linear Quadratic Regulator (LQR) is an optimal control strategy that minimizes a cost function representing the trade-off between state error and control effort. The cost function is defined as:
+
+$$
+J = \int_{0}^{\infty} (\mathbf{x}^\top Q \mathbf{x} + u^\top R u) \, dt
+$$
+
+- \( Q \): State weighting matrix (positive semi-definite).
+- \( R \): Control input weighting scalar or matrix (positive definite).
+- \( \mathbf{x} \): State vector.
+- \( u \): Control input.
+
+The optimal state-feedback gain matrix \( K \) is computed by solving the Continuous-Time Algebraic Riccati Equation (CARE):
+
+$$
+A^\top P + P A - P B R^{-1} B^\top P + Q = 0
+$$
+
+$$
+K = R^{-1} B^\top P
+$$
+
+Where \( P \) is the solution to the CARE. The control law becomes:
+
+$$
+u = -K \mathbf{x}
+$$
+
+### Running the LQR Script
+
+Execute the LQR balancing script:
+
+```bash
+python3 lqr_balancing.py
+```
+
+Ensure that the \( Q \) and \( R \) matrices are appropriately chosen in the script to balance performance and control effort. Proper tuning of these matrices is crucial for achieving optimal balancing behavior.
+
+## References
+
+- [Josh Pieper: Hoverbot - Hoverboard Motor Balancing Robot](https://youtu.be/syxE1NEU7lw?feature=shared&t=449)
