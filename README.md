@@ -61,11 +61,13 @@ The control input \( u(t) \) is calculated as:
 $$
 u(t) = K_p e(t) + K_d \frac{{de(t)}}{{dt}}
 $$
+
 $$
 - \( e(t) \): Error between the desired angle (upright position) and the current angle.
 - \( K_p \): Proportional gain.
 - \( K_d \): Derivative gain.
 $$
+
 The proportional term adjusts the control input proportional to the error, while the derivative term predicts system behavior, providing damping and improving stability. With PID we are running one loop to minimize angular pitch angle to zero by doing velocity control.
 videos
 
