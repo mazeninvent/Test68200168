@@ -1,13 +1,13 @@
 
 # Balancing Lower Body for PIB the Humanoid Robot
 
-## Introduction to Balancing
+## Introduction
 
-Balancing is a fundamental capability for humanoid robots, enabling them to maintain stability while standing or moving. In this project, we focus on balancing the lower body of PIB, our humanoid robot, using control algorithms applied to a simplified model of an inverted pendulum on a cart. By implementing control strategies like PID and LQR, we aim to keep the robot upright and stable.
+To aquire stable movement on the ground for pib, we created a wheel leg hybrid to achieve both; fast, energy efficient and manuevarbility of wheels and ability to squat and change posture of legs. For this system, balancing is a fundamental capability to enable stability. In this project, we focus on balancing the lower body of pib, using control algorithms applied to a simplified model of an inverted pendulum on a cart. By implementing control strategies like PID and LQR, we aim to keep the robot upright and stable while moving.
 
-## Introduction to Moteus and MJBots
+## MJbots MOTEUS
 
-[Moteus](https://github.com/mjbots/moteus) is a high-performance servo motor controller designed by MJBots. It is ideal for robotic applications requiring precise motion control. Moteus offers advanced features such as torque, position, and velocity control, making it suitable for implementing sophisticated control algorithms needed for balancing tasks.
+[Moteus](https://github.com/mjbots/moteus) is a high-performance servo motor controller designed by MJBots. It is ideal for robotic applications requiring precise motion control. Moteus offers advanced features such as torque, position, and velocity control, making it suitable for implementing sophisticated control algorithms needed for balancing tasks. We will be using R4.1 controller for this project to control 90kv eagle power brushless motor. The internal control loops for the motor is explained in [PID for motor](https://pib-rocks.atlassian.net/wiki/x/AQBGEg)
 
 ## Installation
 
@@ -24,7 +24,7 @@ Install the required Python packages:
 pip install -r requirements.txt
 ```
 
-Configure your environment by running:
+Configure the motors by running:
 
 ```bash
 python3 settings.py
@@ -32,7 +32,7 @@ python3 settings.py
 
 ## Quick Scripts for LQR and PID Balancing
 
-To quickly test the balancing algorithms, run the following scripts.
+To quickly test the balancing algorithms on a 1 DOF inverted pendulum system (not on a cart), run the following scripts.
 
 ### PID Balancing
 
@@ -48,7 +48,7 @@ python3 lqr_balancing.py
 
 ## Balancing System Explanation
 
-The balancing system models the lower body of PIB as an inverted pendulum mounted on a cart. The cart represents the wheel base, and the pendulum represents the robot's torso. The objective is to apply control inputs to the motors (cart) to keep the pendulum (torso) balanced upright. This setup simplifies the complex dynamics of a humanoid robot to a more manageable control problem.
+The balancing system models the lower body of PIB as an inverted pendulum mounted on a cart. The cart represents the wheel base, and the pendulum represents the robot's torso. The objective is to apply control inputs to the motors (cart) to keep the pendulum (robot) balanced upright. This setup simplifies the complex dynamics of a humanoid robot to a more manageable control problem. The goal is to keep angular pitch velcoity at 0 and pitch angle upright. To achieve this we are using Tinkerforge IMU bricklet to provide orientation and angular velocity feedback.
 
 ## PID Balancing
 
@@ -61,12 +61,13 @@ The control input \( u(t) \) is calculated as:
 $$
 u(t) = K_p e(t) + K_d \frac{{de(t)}}{{dt}}
 $$
-
+$$
 - \( e(t) \): Error between the desired angle (upright position) and the current angle.
 - \( K_p \): Proportional gain.
 - \( K_d \): Derivative gain.
-
-The proportional term adjusts the control input proportional to the error, while the derivative term predicts system behavior, providing damping and improving stability.
+$$
+The proportional term adjusts the control input proportional to the error, while the derivative term predicts system behavior, providing damping and improving stability. With PID we are running one loop to minimize angular pitch angle to zero by doing velocity control.
+videos
 
 ### Running the PID Script
 
@@ -91,14 +92,14 @@ m l \ddot{x} \cos \theta + m l^2 \ddot{\theta} - m g l \sin \theta = 0
 $$
 
 Where:
-
+$$
 - \( x \): Position of the cart.
 - \( \theta \): Angle of the pendulum (from vertical).
 - \( m \): Mass of the pendulum.
 - \( l \): Length to the pendulum's center of mass.
 - \( F \): Force applied to the cart.
 - \( g \): Acceleration due to gravity.
-
+$$
 These nonlinear equations describe the coupling between the cart and pendulum dynamics.
 
 ## State-Space Representation
@@ -143,12 +144,12 @@ B = \begin{bmatrix}
 $$
 
 Where:
-
+$$
 - \( M \): Mass of the cart.
 - \( m \): Mass of the pendulum.
 - \( l \): Length to the pendulum's center of mass.
 - \( g \): Acceleration due to gravity.
-
+$$
 This linearized model is used for designing the LQR controller.
 
 ## LQR Balancing
