@@ -62,9 +62,9 @@ $$
 u(t) = K_p e(t) + K_d \frac{{de(t)}}{{dt}}
 $$
 
-- \e(t)\: Error between the desired angle (upright position) and the current angle.
-- \K_p\: Proportional gain.
-- \K_d\: Derivative gain.
+- e(t): Error between the desired angle (upright position) and the current angle.
+- Kp: Proportional gain.
+- Kd: Derivative gain.
 
 
 The proportional term adjusts the control input proportional to the error, while the derivative term predicts system behavior, providing damping and improving stability. With PID we are running one loop to minimize angular pitch angle to zero by doing velocity control.
@@ -145,12 +145,10 @@ B = \begin{bmatrix}
 $$
 
 Where:
-$$
-- \( M \): Mass of the cart.
-- \( m \): Mass of the pendulum.
-- \( l \): Length to the pendulum's center of mass.
-- \( g \): Acceleration due to gravity.
-$$
+- M: Mass of the cart.
+- m: Mass of the pendulum.
+- l: Length to the pendulum's center of mass.
+- g: Acceleration due to gravity.
 This linearized model is used for designing the LQR controller.
 
 ## LQR Balancing
