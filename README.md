@@ -53,7 +53,7 @@ The balancing system models the lower body of PIB as an inverted pendulum mounte
 ## PID Balancing
 
 ### PID Controller Explanation
-
+![PID diagram](https://images.app.goo.gl/cwJRcbWmuELH3R7N9)
 A PID controller computes an error value as the difference between a desired setpoint and a measured process variable. It applies a correction based on proportional (P), integral (I), and derivative (D) terms. In our case, we use a PD controller (proportional and derivative terms only) to balance the inverted pendulum.
 
 The control input \( u(t) \) is calculated as:
