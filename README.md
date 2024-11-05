@@ -35,6 +35,12 @@ python3 settings.py
 To quickly test the balancing algorithms on a 1 DOF inverted pendulum system (not on a cart), run the following scripts.
 [PID 0 pitch](https://youtube.com/shorts/0coK8HC5Wkk?feature=share)
 [LQR 0 pitch](https://youtube.com/shorts/olOWUviZS1A?feature=share)
+
+<video width="320" height="240" controls>
+  <source src="https://youtube.com/shorts/olOWUviZS1A?feature=share" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 ### PID Balancing
 
 ```bash
