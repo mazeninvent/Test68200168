@@ -33,7 +33,8 @@ python3 settings.py
 ## Quick Scripts for LQR and PID Balancing
 
 To quickly test the balancing algorithms on a 1 DOF inverted pendulum system (not on a cart), run the following scripts.
-
+[PID 0 pitch](https://youtube.com/shorts/0coK8HC5Wkk?feature=share)
+[LQR 0 pitch](https://youtube.com/shorts/olOWUviZS1A?feature=share)
 ### PID Balancing
 
 ```bash
@@ -53,7 +54,7 @@ The balancing system models the lower body of PIB as an inverted pendulum mounte
 ## PID Balancing
 
 ### PID Controller Explanation
-![PID diagram](media/pid.png)
+![PID diagram](media/PID.png)
 A PID controller computes an error value as the difference between a desired setpoint and a measured process variable. It applies a correction based on proportional (P), integral (I), and derivative (D) terms. In our case, we use a PD controller (proportional and derivative terms only) to balance the inverted pendulum.
 
 The control input \( u(t) \) is calculated as:
@@ -69,6 +70,7 @@ $$
 
 The proportional term adjusts the control input proportional to the error, while the derivative term predicts system behavior, providing damping and improving stability. With PID we are running one loop to minimize angular pitch angle to zero by doing velocity control.
 videos
+[Disturbance compensation with PID](https://youtube.com/shorts/M5Nd9FfMVe8?feature=share)
 
 ### Running the PID Script
 
@@ -93,20 +95,18 @@ m l \ddot{x} \cos \theta + m l^2 \ddot{\theta} - m g l \sin \theta = 0
 $$
 
 Where:
-$$
-- \( x \): Position of the cart.
-- \( \theta \): Angle of the pendulum (from vertical).
-- \( m \): Mass of the pendulum.
-- \( l \): Length to the pendulum's center of mass.
-- \( F \): Force applied to the cart.
-- \( g \): Acceleration due to gravity.
-$$
+- x: Position of the cart.
+- theta: Angle of the pendulum (from vertical).
+- m: Mass of the pendulum.
+- l: Length to the pendulum's center of mass.
+- F: Force applied to the cart.
+- g: Acceleration due to gravity.
 These nonlinear equations describe the coupling between the cart and pendulum dynamics.
 
 ## State-Space Representation
 
 Linearizing the system around the upright position (\( \theta \approx 0 \)), we obtain the state-space representation:
-
+![Inverted pendulum cart](media/inverted_pendulim_cart.png)
 $$
 \dot{\mathbf{x}} = A \mathbf{x} + B u
 $$
@@ -154,17 +154,17 @@ This linearized model is used for designing the LQR controller.
 ## LQR Balancing
 
 ### LQR Controller Explanation
-
+![LQR diagram](media/LQR.png)
 The Linear Quadratic Regulator (LQR) is an optimal control strategy that minimizes a cost function representing the trade-off between state error and control effort. The cost function is defined as:
 
 $$
 J = \int_{0}^{\infty} (\mathbf{x}^\top Q \mathbf{x} + u^\top R u) \, dt
 $$
 
-- \( Q \): State weighting matrix (positive semi-definite).
-- \( R \): Control input weighting scalar or matrix (positive definite).
-- \( \mathbf{x} \): State vector.
-- \( u \): Control input.
+- Q: State weighting matrix (positive semi-definite).
+- R: Control input weighting scalar or matrix (positive definite).
+- \mathbf{x} \): State vector.
+- u: Control input.
 
 The optimal state-feedback gain matrix \( K \) is computed by solving the Continuous-Time Algebraic Riccati Equation (CARE):
 
@@ -181,7 +181,7 @@ Where \( P \) is the solution to the CARE. The control law becomes:
 $$
 u = -K \mathbf{x}
 $$
-
+[Disturbance compensation with LQR](https://youtube.com/shorts/rGGWK-xfWDU?feature=share)
 ### Running the LQR Script
 
 Execute the LQR balancing script:
@@ -190,7 +190,7 @@ Execute the LQR balancing script:
 python3 lqr_balancing.py
 ```
 
-Ensure that the \( Q \) and \( R \) matrices are appropriately chosen in the script to balance performance and control effort. Proper tuning of these matrices is crucial for achieving optimal balancing behavior.
+Ensure that the \( Q \) and \( R \) matrices are appropriately chosen in the script to balance performance and control effort. Proper tuning of these matrices is crucial for achieving optimal balancing behavior. For simplicity, in the current script there is a variable named "scale_factor" that should be adjusted to scale control output.
 
 ## References
 
